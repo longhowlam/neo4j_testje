@@ -33,7 +33,7 @@ MATCH (tom {name: "Tom Hanks"}) RETURN tom;
   
 ## neo4j shell
 sudo docker exec --interactive --tty neo4j bin/cypher-shell
-
+MATCH p=()-[r:WROTE]->() RETURN p LIMIT 25;
 
 ##########################################################################################
 
