@@ -1,11 +1,11 @@
-############################################################
-# using docker to test neo4j
+#####################################################################
+# using docker to test neo4j, see also http://kvangundy.com/wp/set-up-neo4j-and-docker/
+
+
 sudo docker pull neo4j
 
 sudo docker images
-
 sudo docker ps -a
-
 sudo docker rm neo4j
 sudo docker kill neo4j
 
@@ -13,17 +13,18 @@ sudo docker kill neo4j
 sudo docker rm $(sudo docker ps -a -q)
 
 sudo netstat -plnt
-
 sudo kill -15 1551
 
-## starting neo4j with webbrowser
+##### starting neo4j with webbrowser and mapping to host volumes
 sudo docker run \
   --name neo4j \
   --publish=7474:7474 --publish=7687:7687 \
   --volume=$HOME/neo4j/data:/data \
+  --volume=$HOME/neo4j/import:/var/lib/neo4j/import \
   neo4j
 
-#### neo4j shell trough cycli
+
+#### neo4j shell trough cycli, local host tool to connect to running neo4j
 
 sudo pip install cycli
 cycli -u neo4j
@@ -31,18 +32,26 @@ cycli -u neo4j
 MATCH (tom {name: "Tom Hanks"}) RETURN tom;
 
   
-## neo4j shell
+## neo4j shell, start the shell from a running neo4j docjer container
 sudo docker exec --interactive --tty neo4j bin/cypher-shell
 MATCH p=()-[r:WROTE]->() RETURN p LIMIT 25;
 
-##########################################################################################
 
 
-##### normal install 
-sudo apt-get install neo4j
+### import with load CSV tool in cypher shell
+## data set CSV needs to be on the host in $HOME/neo4j/import
+LOAD CSV WITH HEADERS FROM "file:///persons.csv" AS csvLine
+CREATE (p:PersonQQ {id: toInt(csvLine.id), name: csvLine.name})
+;
 
-sudo iptables -I INPUT 1 -i eth0 -p tcp --dport 7474 -j ACCEPT
-sudo service neo4j start
-sudo service neo4j status
+
+
+
+
+
+
+
+
+
 
 
