@@ -37,7 +37,7 @@ sudo docker exec --interactive --tty neo4j bin/cypher-shell
 #neo4j
 #longhowneo
 MATCH p=()-[r:WROTE]->() RETURN p LIMIT 25;
-
+MATCH (tom {name: "Tom Hanks"}) RETURN tom;
 
 
 ### import with load CSV tool in cypher shell
@@ -46,8 +46,19 @@ LOAD CSV WITH HEADERS FROM "file:///persons.csv" AS csvLine
 CREATE (p:PersonQQ {id: toInt(csvLine.id), name: csvLine.name})
 ;
 
+########### artiesten voorbeeld
+## artists
+LOAD CSV FROM 'file:///artists.csv' AS line
+CREATE (:Artist { name: line[1], year: toInteger(line[2])});
+
+## relationships
+LOAD CSV WITH HEADERS FROM "file:///artistsrel.csv" AS edges
+MATCH (a:Artist { Artist: edges.source})
+MATCH (b:Artist { Artist: edges.target })
+CREATE (a)-[:HAS_FRIEND]->(b);
 
 
+:exit
 
 
 
