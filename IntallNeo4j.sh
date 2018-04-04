@@ -1,6 +1,7 @@
 #####################################################################
 # using docker to test neo4j, see also http://kvangundy.com/wp/set-up-neo4j-and-docker/
 
+sudo systemctl status docker
 
 sudo docker pull neo4j
 
